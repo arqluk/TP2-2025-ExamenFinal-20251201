@@ -1,161 +1,81 @@
 import Joi from "joi";
 
-const validateMagnitude = (req, res, next) => {
+// const validateId = (req, res, next) => {
+//     const { id } = req.body;
+//     const regex = /^[A-Z]{3}\d{3}$/;
+//     const result = regex.test(id);
+//     console.log("Validating ID:", id, result);
+//     if (result === false)
+//         // return res.send(`El id debe ser un valor alfanumérico del tipo AAB123, pero es "${id}"`);
+//     return res.status(400).json({ error: `El id debe ser un valor alfanumérico del tipo AAB123, pero es "${id}"` });
+//     return next();
 
-    const temperatureMagnitudeSchema = Joi.object({
-        magnitud: Joi.number().integer()
-        .required()
-    });
+//     return res.status(400).json({ error: `El id debe ser ...` });
+// };
 
-    const { error } = temperatureMagnitudeSchema.validate({ magnitud: req.body.magnitud });
-
-    if (error) {
-        return res.status(400).json({
-            error: "magnitud inválida"
-        });
-    }
-
-    next();
-};
-
-const validateUnit = (req, res, next) => {
-
-    const temperatureUnitSchema = Joi.object({
-        unidad: Joi.string()
-            .valid("kelvin", "celsius", "farenheit")
+const validateId = (req, res, next) => {
+    // console.log("DEBUG validateId - req.body:", req.body);
+//   console.log("DEBUG validateId - id:", typeof req.body.id, `"${req.body.id}"`);
+    const runnerIdSchema = Joi.object({
+        id: Joi.string()
+            .pattern(/^[A-Z]{3}\d{3}$/)
             .required()
     });
-    const { error } = temperatureUnitSchema.validate({ unidad: req.body.unidad });
+
+    // const { error } = runnerIdSchema.validate(req.body);
+    const { error } = runnerIdSchema.validate({ id: req.body.id });
+
     if (error) {
         return res.status(400).json({
-            error: "unidad no válida"
+            error: `El id debe ser un valor alfanumérico del tipo COR123.`
         });
     }
+
     next();
 };
 
-const validateRange = (req, res, next) => {
-
-    const temperatureRangeSchema = Joi.object({
-        min: Joi.number().integer().required(),
-        max: Joi.number().integer().required()
-    });
-    const { error, value } = temperatureRangeSchema.validate(req.query);
-    if (error) {
-        return res.status(400).json({
-            error: "datos no válidos",
-            details: error.details[0].message
-        });
-    }
-    const min = Number(value.min);
-    const max = Number(value.max);
-    // Validación extra: min no puede ser mayor a max
-    if (min > max) {
-        return res.status(400).json({
-            error: "rango_invalido",
-            message: "El valor 'min' no puede ser mayor que 'max'"
-        });
-    }
-    // Agregar valores convertidos al request
-    req.range = { min, max };
-    next();
-};
-
-export default {
-    validateMagnitude,
-    validateUnit,
-    validateRange
-};
-
-
-
-// -------------------------------------------------------------------------------
-
-// const validateResponsible = (req, res, next) => {
-//     // console.log("DEBUG validateDistrict - req.body:", req.body);
-
-//     const turnsResponsibleSchema = Joi.object({
-//         responsable: Joi.string()
-//             .min(1)
+// export const validateId = (runner) => {
+//     // const regex = /^[A-Z]{3}\d{3}$/;
+//     const runnerSchema = Joi.object({
+//         id: Joi.string()
+//             .pattern(/^[A-Z]{3}\d{3}$/)
 //             .required()
 //     })
 
-//     const { error } = turnsResponsibleSchema.validate({ responsable: req.body.responsable });
+//     // validate -> es propia de Joi y valida el dato que yo le pase
+//     const { error } = runnerSchema.validate(runner)
+//     // Devuelve true si hay error, false si está OK
+//     return error ? true : false;
 
-//     if (error) {
-//         return res.status(400).json({
-//             error: "responsable no puede ser vacío"
-//         });
-//     }
-
-//     next();
 // };
 
-// const validateTelephone = (req, res, next) => {
-//     // console.log("DEBUG validateCandidate - req.body:", req.body);
 
-//     const turnsTelephoneSchema = Joi.object({
-//         telefono: Joi.string()
-//             .pattern(/^[0-9]+$/)     // solo dígitos
-//             .required()
-//     });
+const validateCoordinates = (req, res, next) => {
+    const { xa, ya, za } = req.body;
+    const { xa, ya, za } = req.body;
 
-//     const { error } = turnsTelephoneSchema.validate({ telefono: req.body.telefono });
+    // Definimos el esquema Joi
+    const runnerCoordinatesSchema = Joi.object({
+        xa: Joi.number().required(),
+        ya: Joi.number().required(),
+        za: Joi.number().required()
+    });
 
-//     if (error) {
-//         return res.status(400).json({
-//             error: "telefono admite sólo caracteres numéricos"
-//         });
-//     }
+    // Validamos el body
+    const { error } = runnerCoordinatesSchema.validate({ xa, ya, za });
 
-//     next();
-//     };
+    // Si hay error → devolver 400 con mensaje claro
+    if (error) {
+        return res.status(400).json({
+            error: "xa, ya y za deben ser números válidos."
+        });
+    }
 
-// // Validaciones unificadas ...
-// const validateTurnsDate = (req, res, next) => {
+    // Si pasa la validación → continuar
+    return next();
+};
 
-//     const turnsDateSchema = Joi.object({
-//         dia: Joi.number().integer().min(1).max(30).required(),
-//         mes: Joi.number().integer().min(1).max(12).required(),
-//         hora: Joi.number().integer().min(0).max(23).required()
-//     }).unknown(true);
-
-//     const { error } = turnsDateSchema.validate(req.body);
-
-//     if (error) {
-//         return res.status(400).json({
-//             error: "datos no válidos",
-//             detalle: error.details[0].message
-//         });
-//     }
-
-//     next();
-// };
-
-// const validateType = (req, res, next) => {
-//     // console.log("DEBUG validateDistrict - req.body:", req.body);
-
-//     const turnsTypeSchema = Joi.object({
-//         tipo: Joi.string()
-//             .valid("programado", "auxilio", "cotizacion")
-//             .required()
-//     });
-
-//     const { error } = turnsTypeSchema.validate({ tipo: req.body.tipo });
-
-//     if (error) {
-//         return res.status(400).json({
-//             error: "tipo no correspondiente"
-//         });
-//     }
-
-//     next();
-
-// }
-
-// export default {
-//     validateResponsible,
-//     validateTelephone,
-//     validateTurnsDate,
-//     validateType
-// };
+export default {
+    validateId,
+    validateCoordinates,
+};
