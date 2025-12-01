@@ -51,23 +51,22 @@ const validateId = (req, res, next) => {
 
 
 const validateCoordinates = (req, res, next) => {
-    const { xa, ya, za } = req.body;
-    const { xa, ya, za } = req.body;
+    // const { xa, ya, za } = req.body;
+    const { latitud, longitud } = req.body;
 
     // Definimos el esquema Joi
     const runnerCoordinatesSchema = Joi.object({
-        xa: Joi.number().required(),
-        ya: Joi.number().required(),
-        za: Joi.number().required()
+        latitud: Joi.number().required(),
+        longitud: Joi.number().required()
     });
 
     // Validamos el body
-    const { error } = runnerCoordinatesSchema.validate({ xa, ya, za });
+    const { error } = runnerCoordinatesSchema.validate({ latitud, longitud });
 
     // Si hay error → devolver 400 con mensaje claro
     if (error) {
         return res.status(400).json({
-            error: "xa, ya y za deben ser números válidos."
+            error: "latitud, longitud deben ser números válidos."
         });
     }
 
