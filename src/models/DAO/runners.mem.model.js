@@ -25,7 +25,7 @@ class RunnersMemModel {
             ...this.runners[index], // conserva propiedades previas
             id,
             latitud,
-            longituda
+            longitud
         };
 
         }
@@ -55,7 +55,16 @@ class RunnersMemModel {
                 if (runner.id === newRunner.id) {
                     continue
                 }
-                const distance = this.calculateDistanceGPS(newRunner, runner)
+                // const distance = this.calculateDistanceGPS(newRunner, runner)
+
+                const distance = this.calculateDistanceGPS(
+                newRunner.latitud,
+                newRunner.longitud,
+                runner.latitud,
+                runner.longitud
+            );
+
+                console.log("DISTANCE: ", distance)
                 if (distance < 50) {
                     proximitiesIds.push(runner.id)
                 }
@@ -64,14 +73,6 @@ class RunnersMemModel {
 
         return proximitiesIds
     }
-
-
-    // calculateDistance = (runner1, runner2) => {
-    //     const dLat = runner1.xa - runner2.xa;
-    //     const dy = runner1.ya - runner2.ya;
-    //     const dz = runner1.za - runner2.za;
-    //     return Math.sqrt(dx ** 2 + dy ** 2 + dz ** 2);
-    // }
 
     calculateDistanceGPS = (lat1, lon1, lat2, lon2) => {
         const R = 6371000; // radio terrestre en metros

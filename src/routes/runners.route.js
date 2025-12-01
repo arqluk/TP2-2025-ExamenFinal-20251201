@@ -12,7 +12,6 @@ class RunnersRoutes {
         this.router.get("/runners", this.controller.getAllRunners);
 
         this.router.post("/runners", validationMiddleware.validateId, validationMiddleware.validateCoordinates, this.controller.postRunners);
-        // this.router.post("/runners", this.controller.postRunners);
 
         this.router.delete("/runners/delete/:identifier", this.controller.deleteRunners);
 

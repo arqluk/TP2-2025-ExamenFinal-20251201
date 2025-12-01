@@ -38,15 +38,6 @@ class RunnersController {
         }
     };
 
-    //  postEntities = async (req, res) => {
-    //     const entity = req.body
-    //     if( JSON.stringify(req.body) == "{}") {
-    //     throw new Error("La entidad no tiene los parámetros válidos")
-    // }
-    //     const newEntity = await this.service.postEntities(entity)
-    //     res.send(newEntity)
-    // }
-
     deleteRunners = async (req, res) => {
         const { identifier } = req.params;
         const removedRunner = await this.service.deleteRunners(identifier);
