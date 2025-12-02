@@ -18,10 +18,10 @@ const validateId = (req, res, next) => {
     next();
 };
 
-const validateCoordinates = (req, res, next) => {
+    const validateCoordinates = (req, res, next) => {
     const { latitud, longitud } = req.body;
 
-     const runnerCoordinatesSchema = Joi.object({
+    const runnerCoordinatesSchema = Joi.object({
         latitud: Joi.number().required(),
         longitud: Joi.number().required()
     });

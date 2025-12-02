@@ -61,7 +61,7 @@ class RunnersMemModel {
                 if (distance < 50) {
                     proximitiesIds.push(runner.id)
                 }
-            }
+           }
         }
 
         return proximitiesIds
