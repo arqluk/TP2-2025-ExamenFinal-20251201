@@ -7,7 +7,6 @@ const validateId = (req, res, next) => {
             .required()
     });
 
-    // const { error } = runnerIdSchema.validate(req.body);
     const { error } = runnerIdSchema.validate({ id: req.body.id });
 
     if (error) {
